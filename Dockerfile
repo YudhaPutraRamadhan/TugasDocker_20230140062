@@ -1,4 +1,5 @@
-ROM ubuntu:latest
-LABEL authors="Windows"
-
-ENTRYPOINT ["top", "-b"]
+FROM eclipse-temurin:25-jdk
+ARG JAR_FILE=target/*.jar
+COPY ./target/pertemuan6-0.0.1-SNAPSHOT.jar app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]
+EXPOSE 9091
