@@ -5,12 +5,16 @@
     <style>
         body { font-family: Arial; margin: 20px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; vertical-align: middle; }
         th { background-color: #f2f2f2; }
         .header { display: flex; justify-content: space-between; align-items: center; }
         .btn { padding: 8px 15px; text-decoration: none; border-radius: 4px; }
         .btn-input { background: #28a745; color: white; }
         .btn-logout { background: #dc3545; color: white; }
+        .foto-profil { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #ccc; }
+        .upload-form { display: flex; flex-direction: column; gap: 5px; }
+        .upload-form input { font-size: 12px; padding: 4px; }
+        .upload-form button { font-size: 12px; padding: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -27,20 +31,39 @@
     <thead>
     <tr>
         <th>No</th>
+        <th>Foto Profil</th>
         <th>Nama</th>
         <th>NIM</th>
         <th>Jenis Kelamin</th>
+        <th>Deskripsi Foto</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="mhs, iter : ${listMhs}">
         <td th:text="${iter.count}"></td>
+
+        <td style="width: 200px;">
+            <img th:if="${mhs.fotoPath != null}" th:src="@{'/uploads/' + ${mhs.fotoPath}}" class="foto-profil" alt="Foto Mhs">
+
+            <form class="upload-form" th:if="${mhs.fotoPath == null}" th:action="@{/upload-home}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" th:value="${mhs.id}">
+                <input type="file" name="file" accept="image/*" required>
+                <input type="text" name="deskripsi" placeholder="Masukkan deskripsi..." required>
+                <button type="submit">Upload Foto</button>
+            </form>
+        </td>
+
         <td th:text="${mhs.Nama}"></td>
         <td th:text="${mhs.NIM}"></td>
         <td th:text="${mhs.JenisKelamin}"></td>
+
+        <td>
+            <span th:if="${mhs.deskripsi != null}" th:text="${mhs.deskripsi}"></span>
+            <span th:if="${mhs.deskripsi == null && mhs.fotoPath == null}"><em>Belum ada foto</em></span>
+        </td>
     </tr>
     <tr th:if="${#lists.isEmpty(listMhs)}">
-        <td colspan="4" style="text-align: center;">Belum ada data</td>
+        <td colspan="6" style="text-align: center;">Belum ada data</td>
     </tr>
     </tbody>
 </table>
