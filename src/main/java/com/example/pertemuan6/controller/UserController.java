@@ -25,7 +25,7 @@ public class UserController {
     @Autowired
     private ProfileRepository profileRepository;
 
-    private final String UPLOAD_DIR = System.getProperty("user.dir") + "/src/main/resources/static/uploads/";
+    private final String UPLOAD_DIR = "uploads/";
 
     @GetMapping("/")
     public String loginPage() {
