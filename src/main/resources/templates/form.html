@@ -3,32 +3,62 @@
 <head>
     <title>Form Input Mahasiswa</title>
     <style>
-        body { font-family: Arial; margin: 40px; line-height: 1.6; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; }
-        input[type="text"] { width: 100%; padding: 8px; margin-top: 5px; }
-        .btn-submit { background: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f3; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .form-card { background: white; padding: 2rem 2.5rem; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
+        h2 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; margin-bottom: 20px; text-align: center;}
+
+        .form-group { margin-bottom: 1.2rem; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; font-size: 0.95rem; }
+        input[type="text"] { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1rem; transition: border-color 0.3s; }
+        input[type="text"]:focus { border-color: #28a745; outline: none; box-shadow: 0 0 5px rgba(40,167,69,0.2); }
+
+        .radio-group { display: flex; gap: 20px; align-items: center; padding-top: 5px;}
+        .radio-item { display: flex; align-items: center; gap: 5px; cursor: pointer;}
+        .radio-item input[type="radio"] { cursor: pointer; transform: scale(1.1);}
+        .radio-item label { margin-bottom: 0; cursor: pointer; color: #555; font-weight: normal;}
+
+        .btn-submit { background: #28a745; color: white; border: none; padding: 12px 20px; cursor: pointer; border-radius: 6px; width: 100%; font-size: 1rem; font-weight: bold; margin-top: 15px; transition: background 0.3s; box-shadow: 0 2px 5px rgba(40,167,69,0.3); }
+        .btn-submit:hover { background: #218838; }
+
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #6c757d; text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+        .back-link:hover { color: #343a40; text-decoration: underline; }
     </style>
 </head>
 <body>
-<h2>Form Input Mahasiswa</h2>
-<form th:action="@{/save}" th:object="${user}" method="post">
-    <div class="form-group">
-        <label>Nama:</label>
-        <input type="text" th:field="*{Nama}" required>
-    </div>
-    <div class="form-group">
-        <label>NIM:</label>
-        <input type="text" th:field="*{NIM}" required>
-    </div>
-    <div class="form-group">
-        <label>Jenis Kelamin:</label>
-        <input type="radio" th:field="*{JenisKelamin}" value="Laki-laki"> Laki-laki
-        <input type="radio" th:field="*{JenisKelamin}" value="Perempuan"> Perempuan
-    </div>
-    <button type="submit" class="btn-submit">Submit</button>
-</form>
-<br>
-<a th:href="@{/home}">Kembali ke Home</a>
+
+<div class="form-card">
+    <h2>Tambah Data Mahasiswa</h2>
+    <form th:action="@{/save}" th:object="${user}" method="post">
+
+        <div class="form-group">
+            <label>Nama Lengkap:</label>
+            <input type="text" th:field="*{Nama}" placeholder="Masukkan nama..." required>
+        </div>
+
+        <div class="form-group">
+            <label>NIM:</label>
+            <input type="text" th:field="*{NIM}" placeholder="Masukkan NIM..." required>
+        </div>
+
+        <div class="form-group">
+            <label>Jenis Kelamin:</label>
+            <div class="radio-group">
+                <div class="radio-item">
+                    <input type="radio" id="lk" th:field="*{JenisKelamin}" value="Laki-laki" required>
+                    <label for="lk">Laki-laki</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="pr" th:field="*{JenisKelamin}" value="Perempuan">
+                    <label for="pr">Perempuan</label>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Simpan Data</button>
+    </form>
+
+    <a th:href="@{/home}" class="back-link">← Kembali ke Dashboard</a>
+</div>
+
 </body>
 </html>

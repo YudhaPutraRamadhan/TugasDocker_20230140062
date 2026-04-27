@@ -1,14 +1,13 @@
 package com.example.pertemuan6.controller;
 
+import com.example.pertemuan6.model.Profile;
 import com.example.pertemuan6.model.User;
-import com.example.pertemuan6.repository.UserRepository; // Pastikan kamu sudah membuat interface UserRepository
+import com.example.pertemuan6.repository.ProfileRepository;
+import com.example.pertemuan6.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -22,6 +21,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     private final String UPLOAD_DIR = System.getProperty("user.dir") + "/src/main/resources/static/uploads/";
 
@@ -45,6 +47,10 @@ public class UserController {
     @GetMapping("/home")
     public String homePage(Model model) {
         model.addAttribute("listMhs", userRepository.findAll());
+
+        Profile adminProfile = profileRepository.findById(1L).orElse(new Profile(1L, null, null));
+        model.addAttribute("adminProfile", adminProfile);
+
         return "home";
     }
 
@@ -60,14 +66,13 @@ public class UserController {
         return "redirect:/home";
     }
 
-    @PostMapping("/upload-home")
-    public String uploadDariHome(@RequestParam("id") Long id,
-                                 @RequestParam("deskripsi") String deskripsi,
-                                 @RequestParam("file") MultipartFile file) throws IOException {
+    @PostMapping("/upload-profile")
+    public String uploadProfile(@RequestParam("deskripsi") String deskripsi,
+                                @RequestParam("file") MultipartFile file) throws IOException {
 
-        User user = userRepository.findById(id).orElse(null);
+        Profile profile = profileRepository.findById(1L).orElse(new Profile(1L, null, null));
 
-        if (user != null && !file.isEmpty()) {
+        if (!file.isEmpty()) {
             File uploadPath = new File(UPLOAD_DIR);
             if (!uploadPath.exists()) uploadPath.mkdirs();
 
@@ -75,10 +80,11 @@ public class UserController {
             Path path = Paths.get(UPLOAD_DIR + fileName);
             Files.write(path, file.getBytes());
 
-            user.setFotoPath(fileName);
-            user.setDeskripsi(deskripsi);
-            userRepository.save(user);
+            profile.setFotoPath(fileName);
         }
+        profile.setDeskripsi(deskripsi);
+        profileRepository.save(profile);
+
         return "redirect:/home";
     }
 
